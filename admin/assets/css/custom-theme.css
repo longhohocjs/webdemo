@@ -1,0 +1,137 @@
+/* ==========================
+   Global Styles
+========================== */
+body {
+  background-color: #c8d8e4; /* nền trang */
+  color: #333;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+/* ==========================
+   Sidebar
+========================== */
+#sidebar {
+  background-color: #2b6770; /* màu chính sidebar */
+  color: #fff;
+  min-height: 100vh;
+}
+
+#sidebar a {
+  color: #fff;
+  display: block;
+  padding: 0.75rem 1rem;
+  transition: background 0.3s;
+}
+
+#sidebar a:hover,
+#sidebar .nav-item.active a {
+  background-color: #52ab98; /* hover và active */
+  color: #fff;
+}
+
+/* ==========================
+   Topbar
+========================== */
+#topbar {
+  background-color: #fff;
+  border-bottom: 1px solid #f2f2f2;
+  padding: 0.5rem 1rem;
+}
+
+#topbar h5 {
+  margin: 0;
+  color: #2b6770;
+}
+
+/* ==========================
+   Cards
+========================== */
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+/* ==========================
+   Buttons
+========================== */
+.btn-primary {
+  background-color: #52ab98;
+  border-color: #52ab98;
+  color: #fff;
+  transition: all 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #2b6770;
+  border-color: #2b6770;
+  color: #fff;
+}
+
+.btn-success {
+  background-color: #2b6770;
+  border-color: #2b6770;
+}
+
+.btn-success:hover {
+  background-color: #52ab98;
+  border-color: #52ab98;
+}
+
+/* ==========================
+   Table
+========================== */
+.table th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.table td {
+  background-color: #fff;
+  color: #333;
+}
+
+.table tr:hover td {
+  background-color: #e0f2f1;
+}
+
+/* ==========================
+   Form Inputs
+========================== */
+.form-control {
+  background-color: #fff;
+  border: 1px solid #f2f2f2;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.form-control:focus {
+  border-color: #52ab98;
+  box-shadow: 0 0 5px rgba(82, 171, 152, 0.5);
+}
+
+/* ==========================
+   Alerts & Messages
+========================== */
+.text-danger {
+  color: #d9534f;
+}
+
+.alert {
+  border-radius: 5px;
+}
+
+/* ==========================
+   Misc
+========================== */
+.preview-img {
+  width: 80px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+a {
+  text-decoration: none;
+}
