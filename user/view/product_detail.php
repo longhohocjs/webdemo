@@ -69,19 +69,6 @@
                 <div class="product-info">
                     <h2><?= htmlspecialchars($product['name']) ?></h2>
 
-                    <div class="rating">
-                        <?php if ($countRating > 0): ?>
-                        <span class="stars">
-                            <?php for ($i = 1; $i <= 5; $i++): ?>
-                            <i class="fa<?= $i <= round($avgRating) ? 's' : 'r' ?> fa-star"></i>
-                            <?php endfor; ?>
-                        </span>
-                        <span>(<?= $countRating ?> đánh giá - trung bình <?= $avgRating ?>⭐)</span>
-                        <?php else: ?>
-                        <span>Chưa có đánh giá</span>
-                        <?php endif; ?>
-                    </div>
-
                     <div class="price">
                         <?php if (!empty($product['sale_price']) && $product['sale_price'] > 0): ?>
                         <span class="sale"><?= number_format($product['sale_price'], 0, ',', '.') ?>₫</span>
@@ -110,12 +97,7 @@
                         <p>Chưa có đánh giá nào cho sản phẩm này.</p>
                         <?php endif; ?>
                     </div>
-                    <form method="GET" action="index.php">
-                        <input type="hidden" name="controller" value="cart">
-                        <input type="hidden" name="action" value="add">
-                        <input type="hidden" name="id" value="<?= $product['id'] ?>">
-                        <button type="submit" class="btn-add">Thêm vào giỏ hàng</button>
-                    </form>
+                    <button class="btn-add" onclick="addToCart(<?= $product['id'] ?>)">Thêm vào giỏ hàng</button>
                 </div>
             </div>
 
@@ -123,6 +105,43 @@
         </div>
         </div>
 
+        <script>
+        function addToCart(productId) {
+            fetch(`index.php?controller=cart&action=add&id=${productId}`)
+                .then(response => response.text())
+                .then(data => {
+                    // ✅ Hiển thị thông báo
+                    showToast("Đã thêm sản phẩm vào giỏ hàng!");
+
+                    // (Tùy chọn) cập nhật số lượng giỏ hàng hiển thị trên header
+                    const cartCount = document.querySelector("#cart-count");
+                    if (cartCount) {
+                        const current = parseInt(cartCount.textContent) || 0;
+                        cartCount.textContent = current + 1;
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi thêm giỏ hàng:", error);
+                });
+        }
+
+        // Hàm hiển thị thông báo gọn gàng
+        function showToast(message) {
+            let toast = document.createElement("div");
+            toast.textContent = message;
+            toast.style.position = "fixed";
+            toast.style.bottom = "20px";
+            toast.style.right = "20px";
+            toast.style.background = "#28a745";
+            toast.style.color = "#fff";
+            toast.style.padding = "10px 15px";
+            toast.style.borderRadius = "5px";
+            toast.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+            toast.style.zIndex = "9999";
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+        </script>
 
     </main>
 
@@ -131,6 +150,22 @@
         <div class="footer__logo">MyShop</div>
         <p>&copy; 2025 MyShop. All rights reserved.</p>
     </footer>
+
+    <script>
+    function addToCart(productId) {
+        fetch(`index.php?controller=cart&action=add&id=${productId}`, {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Đã thêm vào giỏ hàng');
+                } else {
+                    alert('Thêm giỏ hàng thất bại');
+                }
+            });
+    }
+    </script>
 </body>
 
 </html>

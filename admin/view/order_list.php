@@ -36,7 +36,6 @@
                                     <tbody>
                                         <?php if(!empty($orders)): ?>
                                         <?php foreach($orders as $o): ?>
-                                        <pre><?php print_r($orders); ?></pre>
                                         <tr>
                                             <td><?= $o['id'] ?></td>
                                             <td><?= htmlspecialchars($o['fullname']) ?></td>

@@ -198,6 +198,7 @@ span {
 
 /* ===================slidebard===================== */
 .slide-bard {
+  margin: 30px;
   display: flex;
   align-items: center;
   gap: 60px;
@@ -253,7 +254,7 @@ span {
 /* ==================product==================== */
 
 .product-new {
-  margin: 60px;
+  margin: 90px 0 30px 0px;
   text-align: center;
 }
 
@@ -421,6 +422,10 @@ span {
 
 .product-name {
   margin-left: 60px;
+}
+
+.total-amount {
+  color: #e74c3c;
 }
 
 .cart-table {
@@ -758,6 +763,7 @@ span {
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  margin-top: 30px;
 }
 
 .order-detail h2 {
@@ -775,7 +781,7 @@ span {
 
 .order-detail th {
   background-color: #2222221a;
-  color: #333;
+  color: #222;
   text-align: left;
   padding: 10px;
 }
@@ -832,7 +838,7 @@ span {
 /* =======================Product detail======================== */
 .product-detail-container {
   max-width: 1000px;
-  margin: 50px auto;
+  margin: 30px auto;
   background: #fff;
   padding: 20px;
   border-radius: 12px;
@@ -889,4 +895,35 @@ span {
 
 .comment .rating {
   color: #ffd700;
+}
+/* ==========================ship banner========================= */
+.shipping-swiper {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.shipping-swiper .swiper-wrapper {
+  transition-timing-function: linear !important; /* giúp chạy đều */
+}
+
+.shipping-swiper .swiper-slide {
+  width: auto; /* cho phép logo có kích thước linh hoạt */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.shipping-swiper img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(0.2);
+  opacity: 0.9;
+  transition: transform 0.3s ease;
+}
+
+.shipping-swiper img:hover {
+  transform: scale(1.1);
+  filter: grayscale(0);
+  opacity: 1;
 }

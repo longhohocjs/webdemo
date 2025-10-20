@@ -68,51 +68,91 @@ class Cart {
     }
 
     // Thanh toán
-public function checkout($user_id, $voucher = null){
-    // Lấy giỏ hàng user
-    $cartItems = $this->getCart($user_id);
-    if(empty($cartItems)) return false;
+    public function checkout($user_id, $order_id, $voucher = null){
+        // Lấy giỏ hàng user
+        $cartItems = $this->getCart($user_id);
+        if(empty($cartItems)) return false;
 
-    // Tính tổng
-    $total = 0;
-    foreach($cartItems as $item){
-        $price = $item['sale_price'] ?? $item['price'];
-        $total += $price * $item['quantity'];
-    }
+        //  Kiểm tra số lượng tồn kho trước khi tạo đơn hàng
+        foreach($cartItems as $item){
+            $stmt = $this->conn->prepare("SELECT quantity FROM products WHERE id = ?");
+            $stmt->execute([$item['product_id']]);
+            $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Áp dụng voucher nếu có
-    $discountAmount = 0;
-    if($voucher){
-        if($voucher['type'] == 'percent'){
-            $discountAmount = $total * $voucher['discount']/100;
-        } else {
-            $discountAmount = $voucher['discount'];
+            if(!$product || $product['quantity'] < $item['quantity']){
+                // Nếu sản phẩm không đủ hàng → báo lỗi và dừng lại
+                echo "<script>alert('Sản phẩm {$item['name']} không đủ số lượng trong kho!'); 
+                     window.location='index.php?controller=cart&action=view';</script>";
+                exit;
+            }
         }
-        $total -= $discountAmount;
-        if($total < 0) $total = 0;
+
+        // Tính tổng
+        $total = 0;
+        foreach($cartItems as $item){
+            $price = $item['sale_price'] ?? $item['price'];
+            $total += $price * $item['quantity'];
+        }
+
+        // Áp dụng voucher nếu có
+        $discountAmount = 0;
+        if($voucher){
+            if($voucher['type'] == 'percent'){
+                $discountAmount = $total * $voucher['discount']/100;
+            } else {
+                $discountAmount = $voucher['discount'];
+            }
+            $total -= $discountAmount;
+            if($total < 0) $total = 0;
+        }
+
+        try {
+            // 🔄 Bắt đầu transaction để đảm bảo tính toàn vẹn
+            $this->conn->beginTransaction();
+
+            // Tạo đơn hàng
+            $stmt = $this->conn->prepare("
+                INSERT INTO orders (user_id, total_price, status, created_at, updated_at)
+                VALUES (?, ?, 'pending', NOW(), NOW())
+            ");
+            $stmt->execute([$user_id, $total]);
+            $order_id = $this->conn->lastInsertId();
+
+            // Thêm sản phẩm vào order_items và trừ kho
+            $stmtInsert = $this->conn->prepare("
+                INSERT INTO order_items (order_id, product_id, quantity, price)
+                VALUES (?, ?, ?, ?)
+            ");
+            $stmtUpdateQty = $this->conn->prepare("
+               UPDATE products SET quantity = quantity - ? WHERE id = ?
+            ");
+
+            foreach($cartItems as $item){
+                $price = $item['sale_price'] ?? $item['price'];
+                $stmtInsert->execute([$order_id, $item['product_id'], $item['quantity'], $price]);
+                $stmtUpdateQty->execute([$item['quantity'], $item['product_id']]);
+            }
+
+            // Xóa giỏ hàng
+            $stmt = $this->conn->prepare("DELETE FROM cart_items WHERE user_id=?");
+            $stmt->execute([$user_id]);
+
+            // Cập nhật trạng thái đơn
+            $stmt = $this->conn->prepare("UPDATE orders SET status='confirmed', updated_at=NOW() WHERE id=?");
+            $stmt->execute([$order_id]);
+
+            //  Commit transaction
+            $this->conn->commit();
+
+            return $order_id;
+
+        } catch (Exception $e) {
+            //  Nếu có lỗi → rollback
+            $this->conn->rollBack();
+            echo "<script>alert('Đặt hàng thất bại: {$e->getMessage()}'); history.back();</script>";
+            return false;
+        }
     }
 
-    // Tạo đơn hàng với status pending
-    $stmt = $this->conn->prepare("INSERT INTO orders (user_id, total_price, status, created_at, updated_at) VALUES (?, ?, 'pending', NOW(), NOW())");
-    $stmt->execute([$user_id, $total]);
-    $order_id = $this->conn->lastInsertId();
-
-    // Chèn order_items
-    $stmtInsert = $this->conn->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
-    foreach($cartItems as $item){
-        $price = $item['sale_price'] ?? $item['price'];
-        $stmtInsert->execute([$order_id, $item['product_id'], $item['quantity'], $price]);
-    }
-
-    // Xóa giỏ hàng user
-    $stmt = $this->conn->prepare("DELETE FROM cart_items WHERE user_id=?");
-    $stmt->execute([$user_id]);
-
-    // Cập nhật trạng thái confirmed để hiển thị doanh thu
-    $stmt = $this->conn->prepare("UPDATE orders SET status='confirmed', updated_at=NOW() WHERE id=?");
-    $stmt->execute([$order_id]);
-
-    return $order_id;
-}
 }
 ?>

@@ -14,7 +14,7 @@ class RevenueController {
         $stmt = $this->conn->prepare("
             SELECT DAYOFWEEK(created_at) as day, SUM(total_price) as total
             FROM orders 
-            WHERE status='confirmed' 
+            WHERE status IN ('delivered', 'success')
             AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
             GROUP BY DAYOFWEEK(created_at)
             ORDER BY DAYOFWEEK(created_at)
@@ -26,7 +26,7 @@ class RevenueController {
         $stmt = $this->conn->prepare("
             SELECT DAY(created_at) as day, SUM(total_price) as total
             FROM orders 
-            WHERE status='confirmed' 
+            WHERE status IN ('delivered', 'success')
             AND MONTH(created_at)=MONTH(NOW()) 
             AND YEAR(created_at)=YEAR(NOW())
             GROUP BY DAY(created_at)
@@ -39,7 +39,7 @@ class RevenueController {
         $stmt = $this->conn->prepare("
             SELECT MONTH(created_at) as month, SUM(total_price) as total
             FROM orders 
-            WHERE status='confirmed' 
+            WHERE status IN ('delivered', 'success') 
             AND YEAR(created_at)=YEAR(NOW())
             GROUP BY MONTH(created_at)
             ORDER BY MONTH(created_at)

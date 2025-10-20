@@ -70,7 +70,8 @@
                                 <button data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block"
                                     type="submit">Đăng ký</button>
                             </div>
-                            <p>Bạn đã có tài khoản? <a href="#!" class="link-info">Đăng nhập tại đây</a></p>
+                            <p>Bạn đã có tài khoản? <a href="index.php?controller=user&action=login"
+                                    class="link-info">Đăng nhập tại đây</a></p>
 
                         </form>
 

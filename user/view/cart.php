@@ -14,7 +14,7 @@
     <!-- Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/custom-theme.css">
+    <link rel="stylesheet" href="assets/css/custom-theme.css?v=<?= time() ?>">
 
 </head>
 
@@ -61,14 +61,13 @@
         <div class="cart shopee-cart">
             <h1>Giỏ hàng của bạn</h1>
             <?php if(!empty($cartItems)): ?>
-            <form method="POST" action="index.php?controller=cart&action=update" class="cart-form">
+            <form id="cart-form" method="POST" action="index.php?controller=cart&action=update" class="cart-form">
                 <table class="cart-table">
                     <thead>
                         <tr>
                             <th>Sản phẩm</th>
                             <th>Đơn giá</th>
                             <th>Số lượng</th>
-                            <th>Thành tiền</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -95,7 +94,6 @@
                                 <input type="number" name="quantity[<?= $item['product_id'] ?? 0 ?>]"
                                     value="<?= $quantity ?>" min="1" class="qty-input">
                             </td>
-                            <td><?= number_format($subtotal,0,',','.') ?>₫</td>
                             <td><a href="index.php?controller=cart&action=remove&id=<?= $item['product_id'] ?? 0 ?>"
                                     class="btn-delete">Xóa</a></td>
                         </tr>
@@ -114,12 +112,15 @@
             <!-- Thanh tổng tiền cố định -->
             <div class="cart-footer">
                 <div class="cart-total">
-                    Tổng tiền: <span id="total-amount"><?= number_format($total ?? 0,0,',','.') ?></span>₫
+                    Tổng tiền: <span class="total-amount"
+                        id="total-amount"><?= number_format($total ?? 0,0,',','.') ?></span>₫
+
                 </div>
                 <div class="cart-buttons">
                     <button type="submit" form="cart-form" class="btn btn-update">Cập nhật</button>
                     <button type="button" onclick="window.location='index.php?controller=cart&action=checkout'"
                         class="btn btn-checkout">Thanh toán</button>
+
                 </div>
             </div>
 
@@ -162,6 +163,44 @@
             })
             .catch(err => console.error(err));
     });
+    document.querySelector('.btn-update').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const form = document.getElementById('cart-form');
+        const formData = new FormData(form);
+
+        fetch('index.php?controller=cart&action=update', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    //  Cập nhật tổng tiền hiển thị
+                    document.getElementById('total-amount').textContent = data.total_formatted;
+
+                    //  Hiển thị thông báo nhẹ
+                    showToast("Giỏ hàng đã được cập nhật!");
+                }
+            })
+            .catch(err => console.error('Lỗi cập nhật giỏ hàng:', err));
+    });
+
+    function showToast(msg) {
+        const toast = document.createElement('div');
+        toast.textContent = msg;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.right = '20px';
+        toast.style.background = '#28a745';
+        toast.style.color = '#fff';
+        toast.style.padding = '10px 15px';
+        toast.style.borderRadius = '6px';
+        toast.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+        toast.style.zIndex = 1000;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
     </script>
 </body>
 

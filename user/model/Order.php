@@ -25,20 +25,32 @@ class Order {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function hasUserPurchasedProduct($user_id, $product_id) {
-    $sql = "SELECT COUNT(*) FROM order_items oi
+        public function hasUserPurchasedProduct($user_id, $product_id) {
+        $sql = "SELECT COUNT(*) FROM order_items oi
             JOIN orders o ON oi.order_id = o.id
             WHERE o.user_id = :user_id 
-              AND oi.product_id = :product_id
-              AND o.status IN ('completed', 'delivered')";
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute([
-        'user_id' => $user_id,
-        'product_id' => $product_id
-    ]);
-    return $stmt->fetchColumn() > 0;
-}
+            AND oi.product_id = :product_id
+            AND o.status IN ('completed', 'delivered')";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            'user_id' => $user_id,
+            'product_id' => $product_id
+        ]);
+        return $stmt->fetchColumn() > 0;
+    }
 
+    public function createOrder($user_id, $total_price, $status = 'pending') {
+        $stmt = $this->conn->prepare("
+            INSERT INTO orders (user_id, total_price, status, created_at, updated_at)
+            VALUES (:user_id, :total_price, :status, NOW(), NOW())
+        ");
+        $stmt->execute([
+            'user_id' => $user_id,
+            'total_price' => $total_price,
+            'status' => $status
+        ]);
+        return $this->conn->lastInsertId();
+}
     
 }
 ?>

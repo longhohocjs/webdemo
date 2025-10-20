@@ -6,6 +6,7 @@ require_once __DIR__.'/../../config/database.php';
 class OrderController {
     private $orderModel;
     private $commentModel;
+    private $conn;
 
     public function __construct(){
         global $conn;
@@ -24,9 +25,7 @@ class OrderController {
     public function history(){
         $user_id = $_SESSION['user']['id'];
         $orders = $this->orderModel->getOrdersByUser($user_id);
-        $user_id = $_SESSION['user']['id'];
-        $orders = $this->orderModel->getOrdersByUser($user_id);
-
+        
         $ordersWithItems = []; // khởi tạo mảng
         foreach($orders as $order){
             $ordersWithItems[] = [
@@ -61,7 +60,7 @@ class OrderController {
             }
         }
 
-        // ✅ Lấy thông tin chi tiết đơn hàng (trạng thái, ngày tạo)
+        //  Lấy thông tin chi tiết đơn hàng (trạng thái, ngày tạo)
         global $conn;
         $stmt = $conn->prepare("SELECT status, created_at FROM orders WHERE id = :id");
         $stmt->execute(['id' => $order_id]);
@@ -89,6 +88,9 @@ class OrderController {
             exit;
         }
     }
+
+    
+
 }
   
 ?>

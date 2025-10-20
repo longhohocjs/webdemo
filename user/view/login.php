@@ -37,6 +37,7 @@
                             <div data-mdb-input-init class="form-outline mb-4">
                                 <input type="text" name="username" placeholder="Username" required id="form2Example18"
                                     class="form-control form-control-lg" />
+
                             </div>
 
                             <div data-mdb-input-init class="form-outline mb-4">
@@ -48,7 +49,8 @@
                                 <button data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block"
                                     type="submit">Login</button>
                             </div>
-                            <p>Bạn chưa có tài khoản? <a href="#!" class="link-info">Đăng ký tại đây</a></p>
+                            <p>Bạn chưa có tài khoản? <a href="index.php?controller=user&action=register"
+                                    class="link-info">Đăng ký tại đây</a></p>
 
                         </form>
 

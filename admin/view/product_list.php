@@ -47,7 +47,7 @@
                                             <th>Tên</th>
                                             <th>Giá</th>
                                             <th>Giảm giá</th>
-                                            <th>Số lượng</th>
+                                            <th>Tồn kho</th>
                                             <th>Mô tả</th>
                                             <th>Hành động</th>
                                         </tr>
@@ -66,7 +66,15 @@
                                             <td><?= $p['name'] ?></td>
                                             <td><?= number_format($p['price'],0,',','.') ?>₫</td>
                                             <td><?= number_format($p['sale_price'],0,',','.') ?>₫</td>
-                                            <td><?= $p['quantity'] ?></td>
+                                            <td>
+                                                <?php if($p['quantity'] <= 0): ?>
+                                                <span class="badge badge-danger">Hết hàng</span>
+                                                <?php elseif($p['quantity'] < 5): ?>
+                                                <span class="badge badge-warning"><?= $p['quantity'] ?></span>
+                                                <?php else: ?>
+                                                <span class="badge badge-success"><?= $p['quantity'] ?></span>
+                                                <?php endif; ?>
+                                            </td>
                                             <td><?= $p['description'] ?></td>
                                             <td>
                                                 <a href="index.php?controller=product&action=edit&id=<?= $p['id'] ?>"

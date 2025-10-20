@@ -56,6 +56,8 @@ class UserController {
         include __DIR__ . '/../view/login.php';
     }
 
+    
+
     // Đăng xuất
     public function logout(){
         session_destroy();

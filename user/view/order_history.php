@@ -108,7 +108,10 @@
                     <div class="order-actions">
                         <a href="index.php?controller=product&action=detail&id=<?= $item['product_id'] ?>"
                             class="btn-detail">Xem sản phẩm</a>
+                        <!-- Chỉ hiển thị nút đánh giá khi trang trạng thái đơn hàng đã giao và thành công-->
+                        <?php if($order['status'] === 'delivered' || $order['status'] === 'Success'): ?>
                         <button class="btn-rate" onclick="openRatingModal(<?= $item['product_id'] ?>)">Đánh giá</button>
+                        <?php endif; ?>
                         <a href="index.php?controller=order&action=detail&id=<?= $order['id'] ?>"
                             class="detail-order__btn">
                             Xem chi tiết đơn hàng

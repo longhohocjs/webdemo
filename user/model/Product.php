@@ -50,13 +50,30 @@ class Product {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-        // Lấy sản phẩm mới nhất
-        public function getLatest($limit = 8) {
-            $stmt = $this->conn->prepare("SELECT * FROM {$this->table} ORDER BY created_at DESC LIMIT ?");
-            $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
+    // Lấy sản phẩm mới nhất
+    public function getLatest($limit = 8) {
+        $stmt = $this->conn->prepare("SELECT * FROM {$this->table} ORDER BY created_at DESC LIMIT ?");
+        $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function reduceQuantity($product_id, $quantity) {
+    $stmt = $this->conn->prepare("
+        UPDATE products 
+        SET quantity = quantity - :quantity 
+        WHERE id = :id AND quantity >= :quantity
+    ");
+    $stmt->execute([
+        ':quantity' => $quantity,
+        ':id' => $product_id
+    ]);
+
+    return $stmt->rowCount() > 0; // true nếu cập nhật thành công
+}
+
+
+    
 
 }
 ?>
