@@ -119,8 +119,8 @@ class CartController {
         // Tính tổng tiền
         $total = 0;
         foreach ($cartItems as $item) {
-            $subtotal = $item['price'] * $item['quantity'];
-            $total += $subtotal;
+            $price = ($item['sale_price'] > 0) ? $item['sale_price'] : $item['price'];
+            $total += $price;
         }
 
         // Áp dụng voucher nếu có
@@ -184,7 +184,7 @@ class CartController {
         $cartItems = $this->cartModel->getCart($user_id);
         $total = 0;
         foreach($cartItems as $item){
-            $price = $item['sale_price'] ?? $item['price'];
+            $price = ($item['sale_price'] > 0) ? $item['sale_price'] : $item['price'];
             $total += $price * $item['quantity'];
         }
 
@@ -215,7 +215,7 @@ class CartController {
               // Tính tổng tiền
             $total = 0;
             foreach ($cart_items as $item) {
-                $price = ($item['sale_price'] > 0) ? $item['sale_price'] : $item['price'];
+               $price = ($item['sale_price'] > 0) ? $item['sale_price'] : $item['price'];
                 $total += $price * $item['quantity'];
             }
             
@@ -234,6 +234,62 @@ class CartController {
                 echo "Thanh toán thất bại!";
         }
     }
+
+    // Hiển thị trang Checkout
+    public function checkoutPage() {
+        if(!isset($_SESSION['user'])){
+            header("Location: index.php?controller=user&action=login");
+            exit;
+        }
+
+        $user_id = $_SESSION['user']['id'];
+        $cartItems = isset($_SESSION['cart']) ? $_SESSION['cart'] : $this->cartModel->getCart($user_id);
+        $voucher = $_SESSION['voucher'] ?? null;
+
+        $total = 0;
+        foreach($cartItems as $item){
+            $price = ($item['sale_price'] ?? 0) > 0 ? $item['sale_price'] : $item['price'];
+            $total += $price * $item['quantity'];
+        }
+
+        // Tính giảm giá nếu có voucher
+        $discount = 0;
+        if($voucher){
+            if($voucher['type'] === 'percent'){
+                $discount = $total * ($voucher['discount']/100);
+            } else {
+                $discount = $voucher['discount'];
+            }
+        }
+
+        $totalAfterDiscount = max(0, $total - $discount);
+
+        include __DIR__ . '/../view/checkout.php';
+    }
+
+    // Xử lý đặt hàng
+    public function placeOrder(){
+        if(!isset($_SESSION['user'])){
+            header("Location: index.php?controller=user&action=login");
+            exit;
+        }
+
+        $user_id = $_SESSION['user']['id'];
+        $cartItems = isset($_SESSION['cart']) ? $_SESSION['cart'] : $this->cartModel->getCart($user_id);
+        $voucher = $_SESSION['voucher'] ?? null;
+
+        $order_id = $this->cartModel->checkout($user_id, null, $voucher);
+
+        if($order_id){
+            unset($_SESSION['cart']);
+            unset($_SESSION['voucher']);
+            header("Location: index.php?controller=order&action=detail&id=$order_id");
+            exit;
+        } else {
+            echo "<script>alert('Đặt hàng thất bại'); window.location='index.php?controller=cart&action=view';</script>";
+        }
+    }
+
 
 }
 ?>

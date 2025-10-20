@@ -90,7 +90,7 @@ class Cart {
         // Tính tổng
         $total = 0;
         foreach($cartItems as $item){
-            $price = $item['sale_price'] ?? $item['price'];
+            $price = ($item['sale_price'] > 0) ? $item['sale_price'] : $item['price'];
             $total += $price * $item['quantity'];
         }
 
@@ -128,7 +128,7 @@ class Cart {
             ");
 
             foreach($cartItems as $item){
-                $price = $item['sale_price'] ?? $item['price'];
+               $price = ($item['sale_price'] > 0) ? $item['sale_price'] : $item['price'];
                 $stmtInsert->execute([$order_id, $item['product_id'], $item['quantity'], $price]);
                 $stmtUpdateQty->execute([$item['quantity'], $item['product_id']]);
             }

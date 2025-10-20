@@ -118,7 +118,7 @@
                 </div>
                 <div class="cart-buttons">
                     <button type="submit" form="cart-form" class="btn btn-update">Cập nhật</button>
-                    <button type="button" onclick="window.location='index.php?controller=cart&action=checkout'"
+                    <button type="button" onclick="window.location='index.php?controller=cart&action=checkoutPage'"
                         class="btn btn-checkout">Thanh toán</button>
 
                 </div>

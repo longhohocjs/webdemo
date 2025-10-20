@@ -442,7 +442,8 @@ span {
 
 .cart-table td {
   text-align: center;
-  padding: 15px 10px;
+  vertical-align: middle; /* căn giữa theo dọc */
+  padding: 10px;
   border-bottom: 1px solid #f2f2f2;
 }
 
@@ -926,4 +927,132 @@ span {
   transform: scale(1.1);
   filter: grayscale(0);
   opacity: 1;
+}
+/* ==================check out======================= */
+
+/* Container chính */
+.checkout-container {
+  max-width: 900px;
+  margin: 20px auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Tiêu đề */
+.checkout-container h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Bảng giỏ hàng */
+.checkout-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.checkout-table th,
+.checkout-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.checkout-table th {
+  font-weight: 600;
+  background-color: #fafafa;
+}
+
+.checkout-table img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  margin-right: 10px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+/* Số lượng readonly */
+.checkout-table input.quantity {
+  width: 60px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+/* Phần địa chỉ & thanh toán */
+.checkout-container h5 {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.checkout-container input.form-control,
+.checkout-container select.form-select {
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+/* Tổng tiền & summary */
+.summary {
+  border: 1px solid #eee;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff8f0;
+}
+
+.summary h5 {
+  margin-bottom: 15px;
+}
+
+.summary p {
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.summary .total {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ee4d2d;
+}
+
+/* Nút đặt hàng */
+#placeOrder {
+  background-color: #ee4d2d;
+  border-color: #ee4d2d;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 12px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+#placeOrder:hover {
+  background-color: #d63f1a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .checkout-table th,
+  .checkout-table td {
+    font-size: 13px;
+    padding: 8px;
+  }
+  .checkout-table img {
+    width: 50px;
+    height: 50px;
+  }
+  .summary {
+    padding: 15px;
+  }
+  #placeOrder {
+    font-size: 14px;
+    padding: 10px;
+  }
 }
