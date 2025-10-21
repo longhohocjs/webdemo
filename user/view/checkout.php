@@ -1,3 +1,12 @@
+<?php
+// Mock dữ liệu đơn vị vận chuyển
+$donViVanChuyen = [
+    ['id' => 1, 'ten' => 'Giao Hàng Nhanh', 'phi' => 30000, 'thoigian' => '1-2 ngày'],
+    ['id' => 2, 'ten' => 'Giao Hàng Tiết Kiệm', 'phi' => 20000, 'thoigian' => '2-4 ngày'],
+    ['id' => 3, 'ten' => 'Viettel Post', 'phi' => 25000, 'thoigian' => '2-3 ngày']
+];
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -56,64 +65,95 @@
         </div>
 
     </header>
+    <!-- cart -->
     <main class="main container">
-        <div class="container checkout-container">
-            <h2>Thanh toán</h2>
+        <div class="cart shopee-cart">
+            <h1>Giỏ hàng của bạn</h1>
+            <?php if(!empty($cartItems)): ?>
+            <form id="cart-form" method="POST" action="index.php?controller=cart&action=update" class="cart-form">
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+            $total = 0;
+            foreach($cartItems as $item): 
+              $price = isset($item['sale_price']) && $item['sale_price'] > 0 
+                ? $item['sale_price'] 
+                : $item['price'];
 
-            <!-- Giỏ hàng -->
-            <table class="table checkout-table">
-                <thead>
-                    <tr>
-                        <th>Sản phẩm</th>
-                        <th>Đơn giá</th>
-                        <th>Số lượng</th>
-                        <th>Thành tiền</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($cartItems as $item): ?>
-                    <tr>
-                        <td>
-                            <img src="../admin/assets/images/products/<?= htmlspecialchars($item['image'] ?? 'default.png') ?>"
-                                alt="">
-                        </td>
-                        <td><?= number_format($item['price']) ?>₫</td>
-                        <td>
-                        <td><?= $item['quantity'] ?></td>
-                        <td class="item-total"><?= number_format($item['price'] * $item['quantity']) ?>₫</td>
-                    </tr>
+              $quantity = $item['quantity'] ?? 1;
+              $subtotal = $price * $quantity;
+              $total += $subtotal;
+          ?>
+                        <tr>
+                            <td class="product-info">
+                                <img src="../admin/assets/images/products/<?= htmlspecialchars($item['image'] ?? 'default.png') ?>"
+                                    alt="">
+                                <div class="product-name"><?= htmlspecialchars($item['name'] ?? '') ?></div>
+                            </td>
+                            <td><?= number_format($price,0,',','.') ?>₫</td>
+                            <td>
+                                <input type="number" name="quantity[<?= $item['product_id'] ?? 0 ?>]"
+                                    value="<?= $quantity ?>" min="1" class="qty-input">
+                            </td>
+                            <td><a href="index.php?controller=cart&action=remove&id=<?= $item['product_id'] ?? 0 ?>"
+                                    class="btn-delete">Xóa</a></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+                <div class="cart-voucher">
+                    <label for="voucher-input">Mã giảm giá:</label>
+                    <input type="text" id="voucher-input" placeholder="Nhập mã voucher"
+                        value="<?= htmlspecialchars($appliedVoucher ?? '') ?>">
+                    <button type="button" id="apply-voucher-btn" class="btn btn-apply">Áp dụng</button>
+                </div>
+            </form>
+            <div class="cart-shipping mt-3">
+                <label for="shipping-select"><strong>Chọn đơn vị vận chuyển:</strong></label>
+                <select id="shipping-select" class="form-select">
+                    <?php foreach($donViVanChuyen as $dv): ?>
+                    <option value="<?= $dv['id'] ?>" data-phi="<?= $dv['phi'] ?>">
+                        <?= $dv['ten'] ?> - <?= number_format($dv['phi']) ?>₫ (<?= $dv['thoigian'] ?>)
+                    </option>
                     <?php endforeach; ?>
-                </tbody>
-            </table>
-
-            <!-- Địa chỉ giao hàng -->
-            <div class="mt-4">
-                <h5>Địa chỉ giao hàng</h5>
-                <input type="text" class="form-control mb-2" placeholder="Họ tên người nhận"
-                    value="<?= $_SESSION['user']['name'] ?? '' ?>">
-                <input type="text" class="form-control mb-2" placeholder="Số điện thoại">
-                <input type="text" class="form-control" placeholder="Địa chỉ">
-            </div>
-
-            <!-- Phương thức thanh toán -->
-            <div class="mt-4">
-                <h5>Phương thức thanh toán</h5>
-                <select class="form-select" id="payment-method">
-                    <option value="cod">Thanh toán khi nhận hàng (COD)</option>
-                    <option value="vnpay">VNPay</option>
-                    <option value="momo">Momo</option>
                 </select>
             </div>
 
-            <!-- Tổng tiền & nút đặt hàng -->
-            <div class="summary mt-4">
-                <h5>Thông tin đơn hàng</h5>
-                <p>Tạm tính: <span id="subtotal"><?= number_format($total) ?>₫</span></p>
-                <p>Phí vận chuyển: <span id="shipping"><?= number_format($shippingFee) ?>₫</span></p>
-                <p>Giảm giá: <span id="discount"><?= number_format($discount) ?>₫</span></p>
-                <p class="total">Tổng cộng: <span id="finalTotal"><?= number_format($total) ?>₫</span></p>
-                <button id="placeOrder" class="btn btn-primary w-100">Đặt hàng</button>
+            <div class="cart-shipping-fee mt-2">
+                Phí vận chuyển: <span id="shipping-fee">0</span>₫
             </div>
+            <div class="cart-grand-total mt-2">
+                Tổng thanh toán: <span id="grand-total"><?= number_format($total) ?></span>₫
+            </div>
+
+
+            <!-- Thanh tổng tiền cố định -->
+            <div class="cart-footer">
+                <div class="cart-total">
+                    Tổng tiền: <span class="total-amount"
+                        id="total-amount"><?= number_format($total ?? 0,0,',','.') ?></span>₫
+
+                </div>
+                <div class="cart-buttons">
+                    <button type="submit" form="cart-form" class="btn btn-update">Cập nhật</button>
+                    <button type="button" onclick="window.location='index.php?controller=cart&action=placeOrder'"
+                        class="btn btn-checkout">Thanh toán</button>
+
+                </div>
+            </div>
+
+            <?php else: ?>
+            <p class="cart-empty">Giỏ hàng trống.</p>
+            <?php endif; ?>
         </div>
     </main>
     <!-- Footer -->
@@ -121,6 +161,101 @@
         <div class="footer__logo">MyShop</div>
         <p>&copy; 2025 MyShop. All rights reserved.</p>
     </footer>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script>
+    document.getElementById('apply-voucher-btn').addEventListener('click', function() {
+        const code = document.getElementById('voucher-input').value.trim();
+
+        if (!code) {
+            alert('Vui lòng nhập mã voucher');
+            return;
+        }
+
+        fetch(`index.php?controller=cart&action=applyVoucher`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `voucher=${encodeURIComponent(code)}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('total-amount').textContent = data.total.toLocaleString();
+                    alert('Voucher áp dụng thành công!');
+                } else {
+                    alert('Voucher không hợp lệ hoặc hết hạn.');
+                }
+            })
+            .catch(err => console.error(err));
+    });
+    document.querySelector('.btn-update').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const form = document.getElementById('cart-form');
+        const formData = new FormData(form);
+
+        fetch('index.php?controller=cart&action=update', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    //  Cập nhật tổng tiền hiển thị
+                    document.getElementById('total-amount').textContent = data.total_formatted;
+
+                    //  Hiển thị thông báo nhẹ
+                    showToast("Giỏ hàng đã được cập nhật!");
+                }
+            })
+            .catch(err => console.error('Lỗi cập nhật giỏ hàng:', err));
+    });
+
+    function showToast(msg) {
+        const toast = document.createElement('div');
+        toast.textContent = msg;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.right = '20px';
+        toast.style.background = '#28a745';
+        toast.style.color = '#fff';
+        toast.style.padding = '10px 15px';
+        toast.style.borderRadius = '6px';
+        toast.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+        toast.style.zIndex = 1000;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+
+    const shippingSelect = document.getElementById('shipping-select');
+    const shippingFeeEl = document.getElementById('shipping-fee');
+    const grandTotalEl = document.getElementById('grand-total');
+    const totalAmountEl = document.getElementById('total-amount'); // Tổng tiền giỏ hàng hiển thị
+    const cartTotal = <?= $total ?>;
+
+    // Hàm cập nhật phí vận chuyển và tổng tiền
+    function capNhatVanChuyen() {
+        const phi = parseInt(shippingSelect.options[shippingSelect.selectedIndex].dataset.phi);
+
+        // Cập nhật phí vận chuyển
+        shippingFeeEl.textContent = phi.toLocaleString();
+
+        // Tổng thanh toán = tiền giỏ hàng + phí vận chuyển
+        const grandTotal = cartTotal + phi;
+        grandTotalEl.textContent = grandTotal.toLocaleString();
+
+        // Đồng bộ luôn tổng tiền giỏ hàng ở phần cart-footer
+        totalAmountEl.textContent = grandTotal.toLocaleString();
+    }
+
+    // Khi chọn đơn vị vận chuyển
+    shippingSelect.addEventListener('change', capNhatVanChuyen);
+
+    // Khởi tạo lần đầu
+    capNhatVanChuyen();
+    </script>
 </body>
 
 </html>

@@ -120,7 +120,8 @@ class CartController {
         $total = 0;
         foreach ($cartItems as $item) {
             $price = ($item['sale_price'] > 0) ? $item['sale_price'] : $item['price'];
-            $total += $price;
+             $quantity = $item['quantity'] ?? 1; // Lấy số lượng
+             $total += $price * $quantity;       // Nhân với số lượng
         }
 
         // Áp dụng voucher nếu có
@@ -143,7 +144,7 @@ class CartController {
         echo json_encode([
             'success' => true,
             'total' => $total,
-            'total_formatted' => number_format($total, 0, ',', '.') . '₫'
+            'total_formatted' => number_format($total, 0, ',', '.') 
         ]);
         exit;
     }   
@@ -269,26 +270,52 @@ class CartController {
 
     // Xử lý đặt hàng
     public function placeOrder(){
-        if(!isset($_SESSION['user'])){
-            header("Location: index.php?controller=user&action=login");
-            exit;
-        }
-
-        $user_id = $_SESSION['user']['id'];
-        $cartItems = isset($_SESSION['cart']) ? $_SESSION['cart'] : $this->cartModel->getCart($user_id);
-        $voucher = $_SESSION['voucher'] ?? null;
-
-        $order_id = $this->cartModel->checkout($user_id, null, $voucher);
-
-        if($order_id){
-            unset($_SESSION['cart']);
-            unset($_SESSION['voucher']);
-            header("Location: index.php?controller=order&action=detail&id=$order_id");
-            exit;
-        } else {
-            echo "<script>alert('Đặt hàng thất bại'); window.location='index.php?controller=cart&action=view';</script>";
-        }
+    if(!isset($_SESSION['user'])){
+        header("Location: index.php?controller=user&action=login");
+        exit;
     }
+
+    $user_id = $_SESSION['user']['id'];
+    $cartItems = isset($_SESSION['cart']) ? $_SESSION['cart'] : $this->cartModel->getCart($user_id);
+    $voucher = $_SESSION['voucher'] ?? null;
+
+    if(empty($cartItems)){
+        echo "<script>alert('Giỏ hàng trống'); window.location='index.php?controller=cart&action=view';</script>";
+        exit;
+    }
+
+    // Lưu tạm giỏ hàng để gửi mail
+    $mailCartItems = $cartItems;
+
+    // Tạo đơn hàng trong DB
+    $order_id = $this->cartModel->checkout($user_id, null, $voucher);
+
+    if($order_id){
+        // ---- Lưu thông tin đơn hàng vào session để gửi mail ----
+        $_SESSION['order'] = [
+            'id' => $order_id,
+            'date' => date('d/m/Y'),
+            'shipping_method' => 'Giao hàng nhanh',
+            'status' => 'Đang xử lý',
+            'delivery_date' => date('d/m/Y', strtotime('+3 days'))
+        ];
+
+        // ---- Gửi mail ----
+        include __DIR__ . '/../mail/sendOrderMail.php';
+        // -----------------------------------
+
+        // Xóa giỏ hàng sau khi gửi mail
+        unset($_SESSION['cart']);
+        unset($_SESSION['voucher']);
+
+        header("Location: index.php?controller=order&action=detail&id=$order_id");
+        exit;
+    } else {
+        echo "<script>alert('Đặt hàng thất bại'); window.location='index.php?controller=cart&action=view';</script>";
+    }
+}
+
+
 
 
 }

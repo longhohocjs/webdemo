@@ -113,7 +113,7 @@
             <div class="cart-footer">
                 <div class="cart-total">
                     Tổng tiền: <span class="total-amount"
-                        id="total-amount"><?= number_format($total ?? 0,0,',','.') ?></span>₫
+                        id="total-amount"><?= number_format($total ?? 0,0,',','.') ?></span>đ
 
                 </div>
                 <div class="cart-buttons">
