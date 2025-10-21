@@ -7,7 +7,7 @@ $action     = $_GET['action'] ?? 'index';     // action mặc định
 
 // Tên class và file controller
 $controllerClass = ucfirst(strtolower($controller)) . 'Controller';
-$controllerFile  = __DIR__ . "/controller/{$controller}Controller.php";
+$controllerFile  = __DIR__ . "/controller/" . ucfirst(strtolower($controller)) . "Controller.php";
 
 // Kiểm tra file controller tồn tại
 if (!file_exists($controllerFile)) {

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang chủ</title>
+    <title>Chi tiết đơn hàng</title>
     <!-- Reset CSS -->
     <link rel="stylesheet" href="assets/css/reset.css">
     <!-- Bootstrap 5 -->
@@ -22,7 +22,7 @@
 <body>
     <!-- Header -->
     <header class="header d-flex align-items-center">
-        <div class="header__logo"><a href="/webbanhangdemo/user/index.php">MyShop</a></div>
+        <div class="header__logo"><a href="/webbanhangdemo/user/index.php">WeoShop</a></div>
         <form class="header__search" method="GET" action="index.php">
             <input class="header__search--keyword" type="text" name="keyword" placeholder="Nhập sản phẩm cần tìm..."
                 value="<?= htmlspecialchars($_GET['keyword'] ?? '') ?>">
@@ -108,7 +108,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer__logo">MyShop</div>
+        <div class="footer__logo">WeoShop</div>
         <p>&copy; 2025 MyShop. All rights reserved.</p>
     </footer>
 

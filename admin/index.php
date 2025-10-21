@@ -5,6 +5,7 @@ require_once '../config/database.php';
 $controller = $_GET['controller'] ?? 'admin';
 $action = $_GET['action'] ?? 'dashboard';
 
+$controller = ucfirst(strtolower($controller));
 $controllerFile = "controller/{$controller}Controller.php";
 
 if(file_exists($controllerFile)){

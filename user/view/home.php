@@ -24,7 +24,7 @@
 
     <!-- Header -->
     <header class="header d-flex align-items-center">
-        <div class="header__logo"><a href="/webbanhangdemo/user/index.php">MyShop</a></div>
+        <div class="header__logo"><a href="/webbanhangdemo/user/index.php">WeoShop</a></div>
         <form class="header__search" method="GET" action="index.php">
             <input class="header__search--keyword" type="text" name="keyword" placeholder="Nhập sản phẩm cần tìm..."
                 value="<?= htmlspecialchars($_GET['keyword'] ?? '') ?>">
@@ -245,8 +245,8 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer__logo">MyShop</div>
-        <p>&copy; 2025 MyShop. All rights reserved.</p>
+        <div class="footer__logo">WeoShop</div>
+        <p>&copy; 2025 WeoShop. All rights reserved.</p>
     </footer>
 
     <!-- Swiper JS -->
