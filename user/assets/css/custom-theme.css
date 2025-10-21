@@ -263,6 +263,11 @@ span {
   text-align: center;
 }
 
+.product-sale {
+  padding-top: 60px;
+  text-align: center;
+}
+
 .product-list {
   padding-top: 40px;
   display: flex;
@@ -959,25 +964,25 @@ span {
 
 #shipping-select:hover,
 #shipping-select:focus {
-  border-color: #ff5722;
+  border-color: #222;
   background-color: #fff;
   outline: none;
 }
 
 /* Hiển thị phí vận chuyển */
 .cart-shipping-fee {
-  margin-top: 10px;
+  margin-top: 40px;
   font-size: 14px;
-  color: #ff5722;
   font-weight: 500;
+  color: var(--white);
 }
 
 /* Tổng thanh toán */
 .cart-grand-total {
-  margin-top: 8px;
+  margin: 20px 09;
   font-size: 16px;
   font-weight: 700;
-  color: #222;
+  color: var(--white);
 }
 
 /* Responsive nhỏ hơn 576px */
@@ -990,4 +995,34 @@ span {
   #shipping-select {
     font-size: 13px;
   }
+}
+/* ==================icon connect==================== */
+.contact__icon--facebook {
+  position: fixed;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  text-decoration: none;
+  z-index: 1;
+  right: 10px;
+  bottom: 30px;
+  color: #222;
+}
+
+.contact__icon--map {
+  position: fixed;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  text-decoration: none;
+  z-index: 1;
+  right: 10px;
+  bottom: 90px;
+  color: #222;
 }

@@ -67,8 +67,8 @@
 
                 <?php foreach($items as $item): ?>
                 <?php 
-            $price = $item['sale_price'] > 0 ? $item['sale_price'] : $item['price']; 
-            $comments = $this->commentModel->getByProduct($item['product_id']);
+                $price = $item['sale_price'] > 0 ? $item['sale_price'] : $item['price']; 
+                $comments = $this->commentModel->getByProduct($item['product_id']);
                 ?>
                 <div class="order-item">
                     <img src="../admin/assets/images/products/<?= $item['image'] ?>" alt="<?= $item['name'] ?>"
@@ -103,6 +103,7 @@
 
                         <?php endif; ?>
 
+
                     </div>
 
                     <div class="order-actions">
@@ -121,6 +122,7 @@
                 <?php endforeach; ?>
             </div>
             <?php endforeach; ?>
+
         </div>
 
         <!-- Modal đánh giá -->

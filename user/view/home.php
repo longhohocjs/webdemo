@@ -11,6 +11,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+    <!-- AOS CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <!-- Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <!-- Custom CSS -->
@@ -57,9 +59,12 @@
         </div>
 
     </header>
-
-
-
+    <div class="contact">
+        <a href="https://www.facebook.com/share/16GPVBCXgU/?mibextid=wwXIfr" class="contact__icon--facebook"><i
+                class="fa-brands fa-facebook"></i></a>
+        <a href="https://maps.app.goo.gl/XXWd9NcuJT5yUJPY7" class="contact__icon--map"><i
+                class="fa-solid fa-map-location-dot"></i></a>
+    </div>
     <main class="main container">
         <!-- Slidebar banner Swiper -->
         <div class="slide-bard">
@@ -85,7 +90,7 @@
         </div>
 
         <!-- Sản phẩm sale -->
-        <div class="product-sale">
+        <div class="product-sale" data-aos="fade-up">
             <?php if(!empty($saleProducts)): ?>
             <div class="section-title">Sản phẩm giảm giá</div>
             <div class="product-list">
@@ -185,9 +190,9 @@
             </div>
         </div>
         <!-- Tất cả sản phẩm -->
-        <div class="product-all">
+        <div class="product-all" data-aos="fade-up">
             <div class="section-title">Tất cả sản phẩm</div>
-            <div class="product-list">
+            <div class="product-list ">
                 <?php foreach($products as $p): ?>
                 <div class="product-item">
                     <a href="index.php?controller=product&action=detail&id=<?= $p['id'] ?>">
@@ -246,6 +251,16 @@
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+    <!-- AOS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+    AOS.init({
+        duration: 800, // thời gian hiệu ứng
+        once: false // chỉ chạy 1 lần khi cuộn
+    });
+    </script>
+
 
     <script>
     var swiper = new Swiper(".mySwiper", {
@@ -381,6 +396,7 @@
             });
     }
     </script>
+
 
 </body>
 

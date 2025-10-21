@@ -207,7 +207,7 @@ $donViVanChuyen = [
                     document.getElementById('total-amount').textContent = data.total_formatted;
 
                     //  Hiển thị thông báo nhẹ
-                    showToast("Giỏ hàng đã được cập nhật!");
+                    showToast("Thanh toán đã được cập nhật!");
                 }
             })
             .catch(err => console.error('Lỗi cập nhật giỏ hàng:', err));

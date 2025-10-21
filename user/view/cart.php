@@ -101,12 +101,12 @@
                     </tbody>
                 </table>
 
-                <div class="cart-voucher">
+                <!-- <div class="cart-voucher">
                     <label for="voucher-input">Mã giảm giá:</label>
                     <input type="text" id="voucher-input" placeholder="Nhập mã voucher"
                         value="<?= htmlspecialchars($appliedVoucher ?? '') ?>">
                     <button type="button" id="apply-voucher-btn" class="btn btn-apply">Áp dụng</button>
-                </div>
+                </div> -->
             </form>
 
             <!-- Thanh tổng tiền cố định -->
@@ -137,32 +137,32 @@
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script>
-    document.getElementById('apply-voucher-btn').addEventListener('click', function() {
-        const code = document.getElementById('voucher-input').value.trim();
+    // document.getElementById('apply-voucher-btn').addEventListener('click', function() {
+    //     const code = document.getElementById('voucher-input').value.trim();
 
-        if (!code) {
-            alert('Vui lòng nhập mã voucher');
-            return;
-        }
+    //     if (!code) {
+    //         alert('Vui lòng nhập mã voucher');
+    //         return;
+    //     }
 
-        fetch(`index.php?controller=cart&action=applyVoucher`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `voucher=${encodeURIComponent(code)}`
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('total-amount').textContent = data.total.toLocaleString();
-                    alert('Voucher áp dụng thành công!');
-                } else {
-                    alert('Voucher không hợp lệ hoặc hết hạn.');
-                }
-            })
-            .catch(err => console.error(err));
-    });
+    //     fetch(`index.php?controller=cart&action=applyVoucher`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/x-www-form-urlencoded'
+    //             },
+    //             body: `voucher=${encodeURIComponent(code)}`
+    //         })
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             if (data.success) {
+    //                 document.getElementById('total-amount').textContent = data.total.toLocaleString();
+    //                 alert('Voucher áp dụng thành công!');
+    //             } else {
+    //                 alert('Voucher không hợp lệ hoặc hết hạn.');
+    //             }
+    //         })
+    //         .catch(err => console.error(err));
+    // });
     document.querySelector('.btn-update').addEventListener('click', function(e) {
         e.preventDefault();
 
